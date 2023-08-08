@@ -1,7 +1,14 @@
-import { Registree } from "@prisma/client";
 import * as registreeService from "./registree.service";
-import { query, validationResult } from "express-validator";
+import { NextFunction, Request, Response } from "express";
 
-export const createRegistree  = async (data: Omit<Registree, "uuid" | "updatedAt" | "createdAt">) => {
-  registreeService.createRegistree(data);
+export const createRegistree  = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await registreeService.createRegistree(req.body);
+    res.json({
+      data: "Successfully uploaded."
+    })
+    return;
+  } catch (error) {
+    next(error);
+  }
 }

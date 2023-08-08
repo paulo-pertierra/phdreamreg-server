@@ -2,7 +2,7 @@
 import { prisma } from "../../prisma/client";
 import type { Registree } from "@prisma/client";
 
-export const createRegistree = async (data: Omit<Registree, "uuid" | "updatedAt" | "createdAt">) => {
+export async function createRegistree(data: Omit<Registree, "uuid" | "updatedAt" | "createdAt">): Promise<boolean> {
   await prisma.registree.create({
     data
   })

@@ -5,14 +5,10 @@ const app = express();
 import cors from "cors";
 
 app.use(cors());
+app.use(express.json())
 
-app.use("/", (req, res) => {
-  res.json({
-    data: "Hello world!"
-  })
-})
-
-app.use
+import { registreeRouter } from "./modules/registree/regsitree.route";
+app.use("/register", registreeRouter)
 
 app.listen(5000, () => {
   console.log("System is now running!")
