@@ -12,10 +12,10 @@ datasource db {
 
 model Registree {
   uuid String @unique @default(uuid())
-  firstName String
   lastName String
-  emailAddress String
-  contactNumber String
+  firstName String
+  emailAddress String @unique
+  contactNumber String @unique
   company String?
   isSalesforceDevAdmin Boolean @default(false)
   
