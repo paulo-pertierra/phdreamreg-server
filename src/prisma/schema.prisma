@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Registree {
+  uuid String @unique @default(uuid())
+  firstName String
+  lastName String
+  emailAddress String
+  contactNumber String
+  company String?
+  isSalesforceDevAdmin Boolean @default(false)
+  
+  status Status
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+enum Status {
+  PENDING
+  PAID
+  ATTENDED
+}
