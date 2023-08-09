@@ -14,12 +14,12 @@ model Registree {
   uuid String @unique @default(uuid())
   lastName String
   firstName String
-  emailAddress String @unique
+  contactEmail String @unique
   contactNumber String @unique
   company String?
   isSalesforceDevAdmin Boolean @default(false)
   
-  status Status
+  status Status @default(PENDING)
 
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
