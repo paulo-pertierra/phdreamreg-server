@@ -1,4 +1,6 @@
 import express from "express";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 
@@ -10,6 +12,7 @@ app.use(express.json())
 import { registreeRouter } from "./modules/registree/regsitree.route";
 app.use("/register", registreeRouter)
 
-app.listen(5000, () => {
-  console.log("System is now running!")
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () => {
+  console.log(`System is now running at http://localhost:${PORT}`)
 })
