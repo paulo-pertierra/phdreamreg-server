@@ -9,8 +9,8 @@ import cors from "cors";
 app.use(cors());
 app.use(express.json())
 
-import { registreeRouter } from "./modules/registree/regsitree.route";
-app.use("/register", registreeRouter)
+import { apiRouter } from "./modules/apiRouter";
+app.use("/api", apiRouter)
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
