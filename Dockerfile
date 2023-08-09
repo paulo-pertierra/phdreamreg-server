@@ -6,7 +6,7 @@ COPY . .
 
 RUN npm install
 RUN npx prisma generate
-RUN npx prisma db push --accept-data-loss
+RUN npx prisma db push
 
 CMD [ "npm", "run", "start" ]
 

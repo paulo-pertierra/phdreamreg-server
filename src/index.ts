@@ -10,7 +10,7 @@ const app = express();
 import cors from "cors";
 
 app.use(cors());
-app.use(compression())
+app.use(compression({ threshold: 0 }))
 app.use(express.json())
 app.use(express.static(__dirname + "/../public"))
 console.log(__dirname + "/public")
