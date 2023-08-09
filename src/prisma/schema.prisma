@@ -17,7 +17,7 @@ model Registree {
   contactEmail String @unique
   contactNumber String @unique
   company String?
-  isSalesforceDevAdmin Boolean @default(false)
+  salesforceUser Boolean @default(false)
   
   status Status @default(PENDING)
 
