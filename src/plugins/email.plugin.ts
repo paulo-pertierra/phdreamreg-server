@@ -1,17 +1,19 @@
 import { Registree } from "@prisma/client";
 import sgMail from "@sendgrid/mail";
 import { generateQRCodeImage } from "./qrcode.plugin";
-import { uploadImage } from "./cloudinary.plugin";
+import { cloudinary } from "./cloudinary.plugin";
 import * as fs from "fs";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
 export const sendEmail = async (registree: Registree) => {
   
-  generateQRCodeImage(registree.uuid);
+  const cloudinaryResponse = await cloudinary.uploader
+    .upload(generateQRCodeImage(registree.uuid) as unknown as string, {
+      folder: "qr_codes",
+      public_id: `qr_code: ${registree.uuid}`
+    })
 
-  const imageUrl = await uploadImage(__dirname + "/../../.temp/" + registree.uuid + ".png");
-  console.log(imageUrl)
   await sgMail
     .send({
       to: registree.contactEmail,
@@ -244,7 +246,7 @@ export const sendEmail = async (registree: Registree) => {
                                         <tbody>
                                           <tr>
                                             <td style="width:300px;">
-                                              <img src="${ imageUrl }" width="300px" height="300px" alt="${ registree.uuid }" />
+                                              <img src="${ cloudinaryResponse.secure_url }" width="300px" height="300px" alt="${ registree.uuid }" />
                                             </td>
                                           </tr>
                                         </tbody>

@@ -9,20 +9,4 @@ v2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const cloudinary = v2;
-
-export const uploadImage = async (file: string) => {
-  let url = "";
-  await cloudinary.uploader
-    .upload(file, {
-      use_filename: true,
-      overwrite: true,
-      unique_filename: true
-    }).then((response) => {
-      url = response.secure_url;
-      console.log("uploaded!")
-    }).catch((error) => {
-      console.error(error);
-    })
-  return url;
-}
+export const cloudinary = v2;
