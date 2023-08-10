@@ -9,7 +9,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 export const sendEmail = async (registree: Registree) => {
   
   const cloudinaryResponse = await cloudinary.uploader
-    .upload(generateQRCodeImage(registree.uuid) as unknown as string, {
+    .upload(await generateQRCodeImage(registree.uuid) as unknown as string, {
       folder: "qr_codes",
       public_id: `qr_code: ${registree.uuid}`
     })
