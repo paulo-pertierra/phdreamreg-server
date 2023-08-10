@@ -1,12 +1,10 @@
-FROM node:16-alpine
+FROM node:16-bullseye-slim
 
 WORKDIR /app
 
 COPY . .
 
-RUN apk add --no-cache --virtual .gyp python3 py3-pip make g++ \
- && npm install \
- && apk del .gyp \
+RUN npm install \
  && npx prisma generate \
  && npx prisma db push
 
