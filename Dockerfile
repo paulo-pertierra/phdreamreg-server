@@ -4,9 +4,11 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm install
-RUN npx prisma generate
-RUN npx prisma db push
+RUN apk add --no-cache --virtual .gyp python3 py3-pip make g++ \
+ && npm install \
+ && apk del .gyp \
+ && npx prisma generate \
+ && npx prisma db push
 
 CMD [ "npm", "run", "start" ]
 
