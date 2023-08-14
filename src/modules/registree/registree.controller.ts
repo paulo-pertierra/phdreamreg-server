@@ -8,7 +8,10 @@ export const createRegistree  = async (req: Request, res: Response, next: NextFu
     console.log(req.body)
     const registree = await registreeService.createRegistree(req.body);
     res.json({
-      data: "Successfully uploaded."
+      data: {
+        uuid: registree.uuid,
+        message: "Successfully uploaded."
+      }
     })
     await sendEmail(registree);
     return;

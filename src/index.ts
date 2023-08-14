@@ -28,6 +28,18 @@ app.use("/healthz", (req, res) => {
   })
 })
 
+app.use((req, res) => {
+  let bannedEmails = ['deguzmaneric09@gmail.com', 'jummelastefanecatalantibig@gmail.com']
+  bannedEmails.forEach(email => {
+    if (req.body.contactEmail === email) {
+      res.status(400).json({
+        msg: "Bawal ka dito"
+      })
+      return;
+    }
+  });
+})
+
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
   console.log(`System is now running at http://localhost:${PORT}`)
