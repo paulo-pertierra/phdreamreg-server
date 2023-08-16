@@ -46,6 +46,7 @@ export const errorHandler: ErrorRequestHandler = (
         message: 'You are not authorized to access this API.'
       }
     });
+    return;
   }
   res.status(500).json({
     error: {

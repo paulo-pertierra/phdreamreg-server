@@ -7,5 +7,5 @@ export const registreeRouter = Router();
 
 registreeRouter.post('/', createRegistreeValidator, registreeController.createRegistree);
 registreeRouter.put('/', authnHandler, (req, res) => {
-  res.send('OK');
+  res.send("OK")
 });
