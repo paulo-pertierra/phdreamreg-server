@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { Request, Response, ErrorRequestHandler, NextFunction } from 'express';
 import { Result } from 'express-validator';
-
+import { TokenExpiredError } from 'jsonwebtoken';
 
 export const errorHandler: ErrorRequestHandler = (
   err: Error,
@@ -40,9 +40,17 @@ export const errorHandler: ErrorRequestHandler = (
     });
     return;
   }
+  if (err instanceof TokenExpiredError) {
+    res.status(401).json({
+      error: {
+        message: 'You are not authorized to access this API.'
+      }
+    });
+  }
   res.status(500).json({
     error: {
-      message: 'Fatal error: The system is down.'
+      message: 'Fatal error: The system encountered an unhandled error.',
+      err
     }
   });
   return;
