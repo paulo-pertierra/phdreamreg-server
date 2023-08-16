@@ -1,25 +1,26 @@
-import { Registree } from "@prisma/client";
-import sgMail from "@sendgrid/mail";
-import { generateQRCodeImage } from "./qrcode.plugin";
-import { cloudinary } from "./cloudinary.plugin";
-import * as fs from "fs";
+import { Registree } from '@prisma/client';
+import sgMail from '@sendgrid/mail';
+import { generateQRCodeImage } from './qrcode.plugin';
+import { cloudinary } from './cloudinary.plugin';
+import * as fs from 'fs';
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
 export const sendEmail = async (registree: Registree) => {
-  
-  const cloudinaryResponse = await cloudinary.uploader
-    .upload(await generateQRCodeImage(registree.uuid) as unknown as string, {
-      folder: "qr_codes",
+  const cloudinaryResponse = await cloudinary.uploader.upload(
+    (await generateQRCodeImage(registree.uuid)) as unknown as string,
+    {
+      folder: 'qr_codes',
       public_id: `qr_code: ${registree.uuid}`
-    })
+    }
+  );
 
   await sgMail
     .send({
       to: registree.contactEmail,
-      from: "paulo.pertierra@bracketdevs.net",
+      from: 'paulo.pertierra@bracketdevs.net',
       subject: "Thanks for registering to Philippine Dreamin' Conference!",
-      text: "This is an email test for the Express application Sendgrid API Integration.",
+      text: 'This is an email test for the Express application Sendgrid API Integration.',
       html: `
       <!doctype html>
         <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -188,7 +189,7 @@ export const sendEmail = async (registree: Registree) => {
                                   </tr>
                                   <tr>
                                     <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                      <div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">Hi ${ registree.firstName },</div>
+                                      <div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">Hi ${registree.firstName},</div>
                                     </td>
                                   </tr>
                                   <tr>
@@ -246,7 +247,7 @@ export const sendEmail = async (registree: Registree) => {
                                         <tbody>
                                           <tr>
                                             <td style="width:300px;">
-                                              <img src="${ cloudinaryResponse.secure_url }" width="300px" height="300px" alt="${ registree.uuid }" />
+                                              <img src="${cloudinaryResponse.secure_url}" width="300px" height="300px" alt="${registree.uuid}" />
                                             </td>
                                           </tr>
                                         </tbody>
@@ -506,11 +507,11 @@ export const sendEmail = async (registree: Registree) => {
     </html>
     `
     })
-  .then(() => {
-    console.log("Sent an email to one user.")
-    fs.unlink(__dirname + `/../../.temp/${registree.uuid}.png`, () => console.log("Deleted."))
-  })
-  .catch((error) => {
-    console.error(error.response.body);
-  })
-}
+    .then(() => {
+      console.log('Sent an email to one user.');
+      fs.unlink(__dirname + `/../../.temp/${registree.uuid}.png`, () => console.log('Deleted.'));
+    })
+    .catch((error) => {
+      console.error(error.response.body);
+    });
+};

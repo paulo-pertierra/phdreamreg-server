@@ -1,1 +1,1 @@
-declare module "yaqrcode";
+declare module 'yaqrcode';
