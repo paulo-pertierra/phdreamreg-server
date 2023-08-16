@@ -1,17 +1,49 @@
 import { Prisma } from '@prisma/client';
-import { Request, Response, ErrorRequestHandler } from 'express';
+import { Request, Response, ErrorRequestHandler, NextFunction } from 'express';
 import { Result } from 'express-validator';
 
-export const errorHandler: ErrorRequestHandler = async (
+
+export const errorHandler: ErrorRequestHandler = (
   err: Error,
-  req: Request,
-  res: Response
+  _req: Request,
+  res: Response,
+  _next: NextFunction
 ) => {
   if (err instanceof Result) {
-    console.log('Yep, validation error.');
+    res.status(422).json({
+      status: 422,
+      ...err
+    });
+    return;
   }
   if (err instanceof Prisma.PrismaClientValidationError) {
-    console.log('Yep, Prisma Client Validation Error');
+    res.status(422).json({
+      error: 'Validation on the client, emitted from the database.'
+    });
+    return;
   }
-  res.status(422).json(err);
+  if (err instanceof Prisma.PrismaClientInitializationError) {
+    res.status(500).json({
+      error: {
+        code: err.errorCode,
+        message: err.message
+      }
+    });
+    return;
+  }
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    res.status(409).json({
+      error: {
+        message:
+          'Record already exists. Please try again with different details, or email us at support.'
+      }
+    });
+    return;
+  }
+  res.status(500).json({
+    error: {
+      message: 'Fatal error: The system is down.'
+    }
+  });
+  return;
 };

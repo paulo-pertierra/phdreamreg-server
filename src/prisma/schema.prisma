@@ -18,7 +18,8 @@ model Registree {
   contactNumber String @unique
   company String?
   salesforceUser Boolean @default(false)
-  
+  salesforceUserRole String?
+
   status Status @default(PENDING)
 
   updatedAt DateTime @updatedAt

@@ -4,17 +4,17 @@ import { sendEmail } from '../../plugins/email.plugin';
 
 export const createRegistree = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log(req.body);
     const registree = await registreeService.createRegistree(req.body);
     res.json({
       data: {
         uuid: registree.uuid,
-        message: 'Successfully uploaded.'
+        message: 'Successfully registered.'
       }
     });
     await sendEmail(registree);
     return;
   } catch (error) {
     next(error);
+    return;
   }
 };

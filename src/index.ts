@@ -7,6 +7,7 @@ import morgan from 'morgan';
 import { apiRouter } from './routes';
 import { healthzRouter } from './modules/healthz/healthz.route';
 import { webRouter } from './modules/web/web.route';
+import { errorHandler } from './middlewares/error.handler';
 
 dotenv.config();
 
@@ -20,6 +21,8 @@ app.use(express.static(__dirname + '/../public'));
 app.use('/', webRouter);
 app.use('/api', apiRouter);
 app.use('/healthz', healthzRouter);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 const BASE_URL = process.env.BASE_URL;
