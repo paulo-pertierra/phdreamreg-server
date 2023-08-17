@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client';
 import { Request, Response, ErrorRequestHandler, NextFunction } from 'express';
 import { Result } from 'express-validator';
 import { TokenExpiredError } from 'jsonwebtoken';
+import { ValidationErrors } from '../modules/registree/registree.validator';
 
 export default async (
   err: Error,
@@ -9,16 +10,16 @@ export default async (
   res: Response,
   _next: NextFunction
 ) => {
-  if (err instanceof Result) {
+  if (err instanceof ValidationErrors) {
     res.status(422).json({
-      status: 422,
-      ...err
+      ...err.errors
     });
     return;
   }
   if (err instanceof Prisma.PrismaClientValidationError) {
     res.status(422).json({
-      error: 'Validation on the client, emitted from the database.'
+      error: 'Validation on the client, emitted from the database.',
+      ...err
     });
     return;
   }

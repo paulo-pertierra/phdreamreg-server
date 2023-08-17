@@ -1,6 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 import { check, validationResult } from 'express-validator';
-import { errorHandler } from '../../middlewares/error.handler';
+import errorHandler from '../../middlewares/error.handler';
+
+export class ValidationErrors extends Error {
+  public errors;
+  constructor(errors: Array<object>) {
+    super()
+    this.name = "Validation Error"
+    this.message = "There are errors in user input"
+    this.errors = errors
+  }
+}
+
 export const createRegistreeValidator = [
   check('lastName').optional(),
   check('firstName').notEmpty().withMessage('First name is required.'),
@@ -21,7 +32,8 @@ export const createRegistreeValidator = [
   async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      errorHandler(errors, req, res, next);
+      
+      next(new ValidationErrors(errors as unknown as Array<object>));
       return;
     }
     next();
