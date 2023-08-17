@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { check, validationResult } from 'express-validator';
-import errorHandler from '../../middlewares/error.handler';
 
 export class ValidationErrors extends Error {
   public errors;
