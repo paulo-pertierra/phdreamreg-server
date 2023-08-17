@@ -6,11 +6,16 @@ import RedisStore from 'rate-limit-redis';
 import { createClient } from 'redis';
 
 const REDIS_URL = process.env.REDIS_URL || '';
+
 const client = createClient({
   url: REDIS_URL
 });
 
-client.connect();
+const attemptRedisConnect = async () => {
+  await client.connect();
+}
+
+attemptRedisConnect();
 
 const CD_15_MINUTES = 15 * 60 * 1000;
 export default rateLimit({
