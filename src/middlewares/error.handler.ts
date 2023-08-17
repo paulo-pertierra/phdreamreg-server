@@ -1,10 +1,9 @@
 import { Prisma } from '@prisma/client';
 import { Request, Response, ErrorRequestHandler, NextFunction } from 'express';
-import { Result } from 'express-validator';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { ValidationErrors } from '../modules/registree/registree.validator';
 
-export default async (
+const errorHandler: ErrorRequestHandler = async (
   err: Error,
   _req: Request,
   res: Response,
@@ -57,3 +56,5 @@ export default async (
   });
   return;
 };
+
+export default errorHandler;
