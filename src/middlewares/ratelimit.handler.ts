@@ -3,19 +3,11 @@ dotenv.config();
 
 import rateLimit from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
-import { createClient } from 'redis';
+import Redis from 'ioredis';
 
 const REDIS_URL = process.env.REDIS_URL || '';
 
-const client = createClient({
-  url: REDIS_URL
-});
-
-const attemptRedisConnect = async () => {
-  await client.connect();
-}
-
-attemptRedisConnect();
+const client = new Redis(REDIS_URL);
 
 const CD_15_MINUTES = 15 * 60 * 1000;
 export default rateLimit({
@@ -24,6 +16,7 @@ export default rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   store: new RedisStore({
-    sendCommand: (...args: string[]) => client.sendCommand(args)
+    // @ts-expect-error - Known issue: the `call` function is not present in @types/ioredis
+    sendCommand: (...args: string[]) => client.call(...args),
   })
 });
