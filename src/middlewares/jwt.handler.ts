@@ -40,7 +40,8 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     }
     resolve(credentials);
     return;
-  }).then(() => {
+  })
+    .then(() => {
       next();
     })
     .catch((error) => {

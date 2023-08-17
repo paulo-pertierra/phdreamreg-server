@@ -9,7 +9,6 @@ import apiRouter from './modules/api.routes';
 import webRouter from './modules/web/web.route';
 import healthzRouter from './modules/healthz/healthz.route';
 
-
 import rateLimiter from './middlewares/ratelimit.handler';
 import errorHandler from './middlewares/error.handler';
 import notFoundHandler from './middlewares/notfound.handler';
@@ -30,7 +29,7 @@ app.use('/api', rateLimiter, apiRouter);
 app.use('/healthz', healthzRouter);
 app.use(errorHandler);
 
-app.use("*", notFoundHandler);
+app.use('*', notFoundHandler);
 
 const ENVIRONMENT = process.env.ENVIRONMENT || 'development';
 const BASE_URL = process.env.BASE_URL || 'http://localhost';

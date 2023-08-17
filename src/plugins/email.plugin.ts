@@ -2,7 +2,6 @@ import { Registree } from '@prisma/client';
 import sgMail from '@sendgrid/mail';
 import { generateQRCodeImage } from './qrcode.plugin';
 import { cloudinary } from './cloudinary.plugin';
-import * as fs from 'fs';
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
@@ -508,10 +507,11 @@ export const sendEmail = async (registree: Registree) => {
     `
     })
     .then(() => {
+      // eslint-disable-next-line no-console
       console.log('Sent an email to one user.');
-      fs.unlink(__dirname + `/../../.temp/${registree.uuid}.png`, () => console.log('Deleted.'));
     })
     .catch((error) => {
-      console.error(error.response.body);
+      // eslint-disable-next-line no-console
+      console.error(error);
     });
 };

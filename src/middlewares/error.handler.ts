@@ -17,15 +17,17 @@ const errorHandler: ErrorRequestHandler = async (
   }
   if (err instanceof Prisma.PrismaClientValidationError) {
     res.status(422).json({
-      error: 'Validation on the client, emitted from the database.',
-      ...err
+      error: {
+        code: err.name,
+        message: err.message
+      }
     });
     return;
   }
   if (err instanceof Prisma.PrismaClientInitializationError) {
     res.status(500).json({
       error: {
-        code: err.errorCode,
+        code: err.errorCode + ': ' + err.name,
         message: err.message
       }
     });
