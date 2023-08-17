@@ -3,11 +3,14 @@ import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
 import morgan from 'morgan';
-import rateLimiter from './middlewares/ratelimit.handler';
+
+import apiRouter from './modules/api.routes';
 
 import webRouter from './modules/web/web.route';
-import apiRouter from './routes';
 import healthzRouter from './modules/healthz/healthz.route';
+
+
+import rateLimiter from './middlewares/ratelimit.handler';
 import errorHandler from './middlewares/error.handler';
 import notFoundHandler from './middlewares/notfound.handler';
 

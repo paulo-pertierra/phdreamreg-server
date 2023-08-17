@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registreeRouter } from './modules/registree/registree.route';
+import { registreeRouter } from './registree/registree.route';
 
 const apiRouter = Router();
 
