@@ -5,16 +5,19 @@ import compression from 'compression';
 import morgan from 'morgan';
 import rateLimiter from './middlewares/ratelimit.handler';
 
-import { webRouter } from './modules/web/web.route';
-import { apiRouter } from './routes';
-import { healthzRouter } from './modules/healthz/healthz.route';
-import { errorHandler } from './middlewares/error.handler';
+import webRouter from './modules/web/web.route';
+import apiRouter from './routes';
+import healthzRouter from './modules/healthz/healthz.route';
+import errorHandler from './middlewares/error.handler';
+import notFoundHandler from './middlewares/notfound.handler';
 
 dotenv.config();
 
 const app = express();
 
+app.disable('x-powered-by');
 app.use(cors());
+
 app.use(compression({ threshold: 0 }));
 app.use(morgan('common'));
 app.use(express.json());
@@ -23,6 +26,8 @@ app.use('/', webRouter);
 app.use('/api', rateLimiter, apiRouter);
 app.use('/healthz', healthzRouter);
 app.use(errorHandler);
+
+app.use("*", notFoundHandler);
 
 const ENVIRONMENT = process.env.ENVIRONMENT || 'development';
 const BASE_URL = process.env.BASE_URL || 'http://localhost';

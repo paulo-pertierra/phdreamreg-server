@@ -3,7 +3,7 @@ import { Request, Response, ErrorRequestHandler, NextFunction } from 'express';
 import { Result } from 'express-validator';
 import { TokenExpiredError } from 'jsonwebtoken';
 
-export const errorHandler: ErrorRequestHandler = (
+export default async (
   err: Error,
   _req: Request,
   res: Response,

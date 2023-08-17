@@ -26,7 +26,7 @@ class AuthenticationError extends Error {
 // }
 
 export default async (req: Request, res: Response, next: NextFunction) => {
-  const verify = new Promise((resolve, reject) => {
+  new Promise((resolve, reject) => {
     if (typeof req.headers.authorization === 'undefined') {
       const error = new AuthenticationError('ERR_LOGGED_OUT', 'Error: User is not logged in.');
       reject(error);
@@ -40,9 +40,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     }
     resolve(credentials);
     return;
-  });
-  await verify
-    .then(() => {
+  }).then(() => {
       next();
     })
     .catch((error) => {

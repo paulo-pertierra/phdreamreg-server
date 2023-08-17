@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-export const healthzRouter = Router();
+const healthzRouter = Router();
 
 healthzRouter.use('/', (req, res) => {
   res.status(200).json({
@@ -8,3 +8,5 @@ healthzRouter.use('/', (req, res) => {
   });
   return;
 });
+
+export default healthzRouter;
