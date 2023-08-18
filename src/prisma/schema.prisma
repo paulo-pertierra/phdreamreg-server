@@ -26,6 +26,12 @@ model Registree {
   createdAt DateTime @default(now())
 }
 
+model Admin {
+  uuid String @unique @default(uuid())
+  username String @unique
+  password String
+}
+
 enum Status {
   PENDING
   PAID

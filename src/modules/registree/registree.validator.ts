@@ -1,19 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import { check, validationResult } from 'express-validator';
-import errorHandler from '../../middlewares/error.handler';
 
 export class ValidationErrors extends Error {
   public errors;
   constructor(errors: Array<object>) {
-    super()
-    this.name = "Validation Error"
-    this.message = "There are errors in user input"
-    this.errors = errors
+    super();
+    this.name = 'Validation Error';
+    this.message = 'There are errors in user input';
+    this.errors = errors;
   }
 }
 
 export const createRegistreeValidator = [
-  check('lastName').optional(),
+  check('lastName').notEmpty().withMessage('Last name is required.'),
   check('firstName').notEmpty().withMessage('First name is required.'),
   check('contactEmail')
     .notEmpty()
@@ -29,10 +28,10 @@ export const createRegistreeValidator = [
     .withMessage('Contact number should be a valid PH number.'),
   check('company').optional(),
   check('salesforceUser').isBoolean().optional(),
+  check('salesforceUserRole').optional(),
   async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      
       next(new ValidationErrors(errors as unknown as Array<object>));
       return;
     }
@@ -40,3 +39,27 @@ export const createRegistreeValidator = [
     return;
   }
 ];
+
+export const updateRegistreeStatusValidator = [
+  check('id').notEmpty().withMessage("UUID Field should not be empty.").bail().isUUID("4").withMessage("UUID Field should be a valid UUIDv4"),
+  check('status').notEmpty().withMessage("Status field should not be empty.").bail().custom((status: string) => {
+    const validStatuses = ['PENDING', 'PAID', 'ATTENDED'];
+    let isValid = false
+    validStatuses.map((validStatus) => {
+      if (validStatus === status) isValid = true
+    })
+    if (!isValid) {
+      return Promise.reject("Status field should only contain [ PENDING | PAID | ATTENDED ].");
+    }
+    return true;
+  }),
+  async (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      next(new ValidationErrors(errors as unknown as Array<object>));
+      return;
+    }
+    next();
+    return;
+  }
+]
