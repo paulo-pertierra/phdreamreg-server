@@ -41,7 +41,7 @@ export const createRegistreeValidator = [
 ];
 
 export const updateRegistreeStatusValidator = [
-  check('uuid').notEmpty().withMessage("UUID Field should not be empty.").bail().isUUID("4").withMessage("UUID Field should be a valid v4 UUID"),
+  check('uuid').notEmpty().withMessage("UUID Field should not be empty.").bail().isUUID("4").withMessage("UUID Field should be a valid UUIDv4"),
   check('status').notEmpty().withMessage("Status field should not be empty.").bail().custom((status: string) => {
     const validStatuses = ['PENDING', 'PAID', 'ATTENDED'];
     let isValid = false

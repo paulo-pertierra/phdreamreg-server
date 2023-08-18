@@ -14,17 +14,6 @@ class AuthenticationError extends Error {
   }
 }
 
-// export default async (req: Request, res: Response, next: NextFunction) => {
-//   try {
-//     if (typeof req.headers.authorization === 'undefined')
-//       throw new AuthenticationError("ERR_LOGGED_OUT", "Error: User is not logged in.")
-//     const jwt = req.headers.authorization.split(' ')[1]
-//   } catch (error) {
-//     next(error);
-//     return;
-//   }
-// }
-
 export default async (req: Request, res: Response, next: NextFunction) => {
   new Promise((resolve, reject) => {
     if (typeof req.headers.authorization === 'undefined') {
