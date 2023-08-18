@@ -8,11 +8,9 @@ export const createRegistree = async (
   return await prisma.registree.create({
     data
   });
-}
+};
 
 export const updateRegistreeStatus = async (uuid: string, status: Status) => {
-  console.log(uuid);
-  console.log(status)
   return await prisma.registree.update({
     where: {
       uuid
@@ -20,21 +18,21 @@ export const updateRegistreeStatus = async (uuid: string, status: Status) => {
     data: {
       status
     }
-  })
-}
+  });
+};
 
 export const getRecentRegistrees = async () => {
   return await prisma.registree.findMany({
     orderBy: {
       createdAt: 'desc'
     }
-  })
-}
+  });
+};
 
 export const getUniqueRegistree = async (uuid: string) => {
   return await prisma.registree.findUnique({
     where: {
       uuid
     }
-  })
-}
+  });
+};

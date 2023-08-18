@@ -27,12 +27,12 @@ export const getRecentRegistrees = async (req: Request, res: Response, next: Nex
       data: {
         registrees
       }
-    })
+    });
   } catch (error) {
     next();
     return;
   }
-}
+};
 
 export const getUniqueRegistree = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -41,22 +41,25 @@ export const getUniqueRegistree = async (req: Request, res: Response, next: Next
       data: {
         registree
       }
-    })
-  } catch(error) {
-    next(error)
+    });
+  } catch (error) {
+    next(error);
   }
-}
+};
 
 export const updateUniqueRegistree = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const registree = registreeService.updateRegistreeStatus(req.params.id as string, req.query.status as Status);
+    const registree = registreeService.updateRegistreeStatus(
+      req.params.id as string,
+      req.query.status as Status
+    );
     res.json({
       data: {
         registree
       }
-    })
-  } catch(error) {
+    });
+  } catch (error) {
     next(error);
     return;
   }
-}
+};

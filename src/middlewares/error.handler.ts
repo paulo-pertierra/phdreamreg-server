@@ -27,7 +27,7 @@ const errorHandler: ErrorRequestHandler = async (
   if (err instanceof PleaseDontHackError) {
     res.status(401).json({
       error: err
-    })
+    });
     return;
   }
   if (err instanceof Prisma.PrismaClientValidationError) {
