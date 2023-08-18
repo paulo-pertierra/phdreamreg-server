@@ -41,7 +41,7 @@ export const createRegistreeValidator = [
 ];
 
 export const updateRegistreeStatusValidator = [
-  check('uuid').notEmpty().withMessage("UUID Field should not be empty.").bail().isUUID("4").withMessage("UUID Field should be a valid UUIDv4"),
+  check('id').notEmpty().withMessage("UUID Field should not be empty.").bail().isUUID("4").withMessage("UUID Field should be a valid UUIDv4"),
   check('status').notEmpty().withMessage("Status field should not be empty.").bail().custom((status: string) => {
     const validStatuses = ['PENDING', 'PAID', 'ATTENDED'];
     let isValid = false
@@ -49,8 +49,9 @@ export const updateRegistreeStatusValidator = [
       if (validStatus === status) isValid = true
     })
     if (!isValid) {
-      throw new Error("Status field should only contain [ PENDING | PAID | ATTENDED ].");
+      return Promise.reject("Status field should only contain [ PENDING | PAID | ATTENDED ].");
     }
+    return true;
   }),
   async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);

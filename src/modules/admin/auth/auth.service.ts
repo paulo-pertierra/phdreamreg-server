@@ -1,35 +1,40 @@
 import { prisma } from "../../../prisma/client";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { issueToken } from "../../../helpers/jwt.helper";
 
-export const getAdmin = async (username: string) => {
-  return await prisma.admin.findUnique({
-    where: {
-      username
-    }
-  })
+export class PleaseDontHackError extends Error {
+  public message: string;
+  constructor(name: string) {
+    super()
+    this.name = name;
+    this.message = "Please don't hack us, we are just simple devs."
+  }
 }
 
-class PleaseDontHackError extends Error {
-  public message: string;
-  constructor() {
-    super()
-    this.name = "ERR_ADMIN_CREATE_ATTEMPT"
-    this.message = "Please don't hack us, we are just simple devs."
+export const authenticateAdmin = async (username: string, password: string) => {
+  const admin = await prisma.admin.findUnique({ where: { username } });
+  if (!admin || !await bcrypt.compare(password, admin.password)) {
+    throw new PleaseDontHackError("ERR_ADMIN_LOGIN_ATTEMPT");
+  }
+  const token = issueToken(admin.uuid);
+  return {
+    username: admin.username,
+    token
   }
 }
 
 export const createAdminOnce = async (username: string, password: string) => {
   const count = await prisma.admin.count();
   if (count !== 0) {
-    throw new PleaseDontHackError();
+    throw new PleaseDontHackError("ERR_ADMIN_CREATE_ATTEMPT");
   }
+  const hashedPassword = await bcrypt.hash(password, 10);
   const admin = await prisma.admin.create({
     data: {
       username,
-      password
+      password: hashedPassword
     }
-  })
-  return {
-    uuid: admin.uuid,
-    username: admin.username
-  }
+  });
+  return admin
 }

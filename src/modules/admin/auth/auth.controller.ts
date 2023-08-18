@@ -1,13 +1,24 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import * as authService from "./auth.service";
 
-export const getAdmin = async (req: Request, res: Response) => {
-  const admin = await authService.getAdmin(req.body.username);
-  res.json({
-    data: admin
-  })
+export const authenticateAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const admin = await authService.authenticateAdmin(req.body.username, req.body.password);
+    res.json({
+      data: admin
+    })
+  } catch(error) {
+    next(error)
+  }
 }
 
-export const createAdminOnce = async (req: Request, res: Response) => {
-  
+export const createAdminOnce = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const admin = await authService.createAdminOnce(req.body.username, req.body.password);
+    res.json({
+      admin
+    })
+  } catch(error) {
+    next(error);
+  }
 }

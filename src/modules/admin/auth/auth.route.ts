@@ -3,7 +3,5 @@ import * as authController from "./auth.controller";
 
 export const adminAuthRouter = Router();
 
-adminAuthRouter.post('/login', authController.getAdmin);
-adminAuthRouter.post('/signup', (req, res) => {
-  res.send("Sign Up")
-});
+adminAuthRouter.post('/login', authController.authenticateAdmin);
+adminAuthRouter.post('/signup', authController.createAdminOnce);
