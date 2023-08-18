@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import { Router } from 'express';
 import * as registreeController from './registree.controller';
 import { createRegistreeValidator, updateRegistreeStatusValidator } from './registree.validator';
 import { validateAdminToken } from '../../middlewares/jwt.handler';
