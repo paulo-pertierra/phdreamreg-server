@@ -25,7 +25,7 @@ export const getRecentRegistrees = async (req: Request, res: Response, next: Nex
     const registrees = await registreeService.getRecentRegistrees();
     res.json({
       data: {
-        registrees
+        ...registrees
       }
     });
   } catch (error) {

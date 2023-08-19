@@ -23,6 +23,9 @@ export const updateRegistreeStatus = async (uuid: string, status: Status) => {
 
 export const getRecentRegistrees = async () => {
   return await prisma.registree.findMany({
+    where: {
+      deleted: false
+    },
     orderBy: {
       createdAt: 'desc'
     }
