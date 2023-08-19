@@ -19,9 +19,9 @@ export const verifyToken = (authorizationHeader: string | undefined) => {
     }
     resolve(credentials);
     return;
-  })
-}
+  });
+};
 
 export const issueToken = (uuid: string) => {
-  return jwt.sign({ uuid }, ADMIN_SECRET, { expiresIn: '15m' })
-}
+  return jwt.sign({ uuid }, ADMIN_SECRET, { expiresIn: '15m' });
+};
