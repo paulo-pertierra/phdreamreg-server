@@ -32,6 +32,23 @@ export const getRecentRegistrees = async () => {
   });
 };
 
+export const getRegistreeStats = async () => {
+  const stats = {
+    totalCount: 0,
+    pendingCount: 0,
+    paidCount: 0,
+    attendedCount: 0,
+    salesforceUsers: 0
+  }
+  stats.totalCount = await prisma.registree.count();
+  stats.pendingCount = await prisma.registree.count({ where: { status: 'PENDING' } });
+  stats.paidCount = await prisma.registree.count({ where: { status: 'PAID' } });
+  stats.attendedCount = await prisma.registree.count({ where: { status: 'ATTENDED' } });
+  stats.salesforceUsers = await prisma.registree.count({ where: { salesforceUser: true } });
+  
+  return stats;
+}
+
 export const getUniqueRegistree = async (uuid: string) => {
   return await prisma.registree.findUnique({
     where: {

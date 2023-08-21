@@ -23,9 +23,13 @@ export const createRegistree = async (req: Request, res: Response, next: NextFun
 export const getRecentRegistrees = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const registrees = await registreeService.getRecentRegistrees();
+    const stats = await registreeService.getRegistreeStats();
     res.json({
       data: {
         ...registrees
+      },
+      meta: {
+        stats
       }
     });
   } catch (error) {
