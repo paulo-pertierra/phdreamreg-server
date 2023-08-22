@@ -25,7 +25,7 @@ app.set('trust proxy', 3)
 app.get('/ip', (request, response) => response.send(request.ip))
 
 app.use(compression({ threshold: 0 }));
-app.use(morgan('common'));
+app.use(morgan('common', { skip: (req, _res) => req.url === '/healthz' ? true : false }));
 app.use(express.json());
 app.use(express.static(__dirname + '/../public'));
 app.use('/', webRouter);
@@ -54,7 +54,7 @@ function start() {
     //eslint-disable-next-line
     console.log('SIGTERM signal received: If using Render, server may have spun down.');
     // eslint-disable-next-line no-console
-    server.close(() => console.log("Successfully shut down."))
+    server.close(() => console.log("Gracefully shut down."))
   })
 }
 
