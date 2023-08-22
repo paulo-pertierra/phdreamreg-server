@@ -20,7 +20,7 @@ export const createRegistree = async (req: Request, res: Response, next: NextFun
   }
 };
 
-export const getRecentRegistrees = async (req: Request, res: Response, next: NextFunction) => {
+export const getRegistrees = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const registrees = await registreeService.getRegistrees({
       page: parseInt(req.query.page as string) || 1,
