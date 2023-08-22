@@ -24,14 +24,7 @@ app.use(cors());
 app.use(compression({ threshold: 0 }));
 app.use(express.json());
 
-app.use(morgan('common', { skip(req, res) {
-  if (req.url === '/healthz') {
-    console.log(req.url)
-    return true
-  }
-  console.log(req.url)
-  return false
-} }));
+app.use(morgan('common', { skip: (req, _res) => req.originalUrl === '/healthz' }));
 
 app.use(express.static(__dirname + '/../public'));
 app.use('/', webRouter);
