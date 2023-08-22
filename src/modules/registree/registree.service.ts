@@ -32,7 +32,7 @@ type QueryParameters = {
   filter?: string
 } | undefined
 
-export const getRecentRegistrees = async (params: QueryParameters = undefined) => {
+export const getRegistrees = async (params: QueryParameters = undefined) => {
   if (params) {
     const { page = 1, pageSize = DEFAULT_PAGE_SIZE, orderBy = 'createdAt', filterBy = 'null', filter } = params;
     let order = params.order;
@@ -49,7 +49,6 @@ export const getRecentRegistrees = async (params: QueryParameters = undefined) =
       orderBy: {
         [orderBy]: order
       },
-      
     });
   } else {
     return await prisma.registree.findMany({
@@ -59,23 +58,20 @@ export const getRecentRegistrees = async (params: QueryParameters = undefined) =
   }
 };
 
-export const getRegistreeStats = async (page: number) => {
-  const total = await prisma.registree.count({ where: { deleted: false } })
-
+export const getRegistreeStats = async (total: number, page: number) => {
   const meta = {
     stats: {
-      totalCount: total,
+      totalCount: await prisma.registree.count({ where: { deleted: false } }),
       pendingCount: await prisma.registree.count({ where: { deleted: false, status: 'PENDING' } }),
       paidCount: await prisma.registree.count({ where: { deleted: false, status: 'PAID' } }),
       attendedCount: await prisma.registree.count({ where: { deleted: false, status: 'ATTENDED' } }),
       salesforceUsers: await prisma.registree.count({ where: { deleted: false, salesforceUser: true } })
     },
-    meta: {
-      pagination: {
-        page,
-        pageCount: Math.ceil(total / DEFAULT_PAGE_SIZE),
-        total
-      }
+    pagination: {
+      page,
+      pageCount: Math.ceil(total / DEFAULT_PAGE_SIZE),
+      pageSize: DEFAULT_PAGE_SIZE,
+      total
     }
   }
 

@@ -22,14 +22,14 @@ export const createRegistree = async (req: Request, res: Response, next: NextFun
 
 export const getRecentRegistrees = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const registrees = await registreeService.getRecentRegistrees({
-      page: parseInt(req.query.page as string),
+    const registrees = await registreeService.getRegistrees({
+      page: parseInt(req.query.page as string) || 1,
       orderBy: req.query.orderby as keyof Registree,
       order: req.query.order = 'desc',
       filterBy: req.query.filterby as keyof Registree,
       filter: req.query.filter as string
     });
-    const meta = await registreeService.getRegistreeStats(parseInt(req.query.page as string));
+    const meta = await registreeService.getRegistreeStats(registrees.length, parseInt(req.query.page as string));
     res.json({
       data: registrees,
       meta
