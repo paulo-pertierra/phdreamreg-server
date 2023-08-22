@@ -8,6 +8,6 @@ RUN npm install \
  && npx prisma generate \
  && npx prisma db push
 
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "prod" ]
 
 EXPOSE 5000
