@@ -34,17 +34,9 @@ app.use('*', notFoundHandler);
 const ENVIRONMENT = process.env.ENVIRONMENT || 'development';
 const BASE_URL = process.env.BASE_URL || 'http://localhost';
 const PORT = process.env.PORT || 5000;
-const ADMIN_SECRET = process.env.ADMIN_SECRET || 'SECRET';
 
 function start() {
-  if (
-    typeof PORT === 'undefined' ||
-    typeof BASE_URL === 'undefined' ||
-    typeof ADMIN_SECRET === 'undefined'
-  ) {
-    throw new Error(`Cannot start app server, .env variables are incomplete.`);
-  }
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     if (ENVIRONMENT === 'development') {
       //eslint-disable-next-line
       console.log(`Development server is running at http://localhost:${PORT}`);
@@ -54,6 +46,12 @@ function start() {
       console.log(`Server is deployed at ${BASE_URL}`);
     }
   });
+  process.on("SIGTERM", () => {
+    //eslint-disable-next-line
+    console.log('SIGTERM signal received: If using Render, server may have spun down.');
+    // eslint-disable-next-line no-console
+    server.close(() => console.log("Successfully shut down."))
+  })
 }
 
 start();

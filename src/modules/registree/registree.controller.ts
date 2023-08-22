@@ -1,7 +1,7 @@
 import * as registreeService from './registree.service';
 import { NextFunction, Request, Response } from 'express';
 import { sendEmail } from '../../plugins/email.plugin';
-import { Status } from '@prisma/client';
+import { Registree, Status } from '@prisma/client';
 
 export const createRegistree = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -22,12 +22,19 @@ export const createRegistree = async (req: Request, res: Response, next: NextFun
 
 export const getRecentRegistrees = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const registrees = await registreeService.getRecentRegistrees();
-    res.json({
-      data: {
-        ...registrees
-      }
+    const registrees = await registreeService.getRecentRegistrees({
+      page: parseInt(req.query.page as string),
+      orderBy: req.query.orderby as keyof Registree,
+      order: req.query.order = 'desc',
+      filterBy: req.query.filterby as keyof Registree,
+      filter: req.query.filter as string
     });
+    const meta = await registreeService.getRegistreeStats(parseInt(req.query.page as string));
+    res.json({
+      data: registrees,
+      meta
+    });
+    return;
   } catch (error) {
     next();
     return;

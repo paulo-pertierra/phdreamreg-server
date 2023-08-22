@@ -12,7 +12,7 @@ const client = new Redis(REDIS_URL);
 const CD_15_MINUTES = 15 * 60 * 1000;
 export default rateLimit({
   windowMs: CD_15_MINUTES,
-  max: 100,
+  max: 1000,
   standardHeaders: true,
   legacyHeaders: false,
   store: new RedisStore({

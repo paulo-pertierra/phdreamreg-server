@@ -1,7 +1,8 @@
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
-import { AuthenticationError } from '../middlewares/jwt.handler';
+import { AuthenticationError } from '../middlewares/jwtverification.handler';
 import dotenv from 'dotenv';
 dotenv.config();
+
 const ADMIN_SECRET = process.env.ADMIN_SECRET || 'SECRET';
 
 export const verifyToken = (authorizationHeader: string | undefined) => {
