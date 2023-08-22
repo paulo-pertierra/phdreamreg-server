@@ -2,6 +2,8 @@
 import { prisma } from '../../prisma/client';
 import type { Registree, Status } from '@prisma/client';
 
+const DEFAULT_PAGE_SIZE = 15;
+
 export const createRegistree = async (
   data: Omit<Registree, 'uuid' | 'updatedAt' | 'createdAt' | 'updatedAt'>
 ): Promise<Registree> => {
@@ -21,32 +23,69 @@ export const updateRegistreeStatus = async (uuid: string, status: Status) => {
   });
 };
 
-export const getRecentRegistrees = async () => {
-  return await prisma.registree.findMany({
-    where: {
-      deleted: false
-    },
-    orderBy: {
-      createdAt: 'desc'
+type QueryParameters = {
+  page?: number
+  pageSize?: number
+  orderBy?: keyof Registree
+  order?: 'desc' | 'asc'
+  filterBy?: keyof Registree
+  filter?: string
+} | undefined
+
+export const getRecentRegistrees = async (params: QueryParameters = undefined) => {
+  if (params) {
+    const { page = 1, pageSize = DEFAULT_PAGE_SIZE, orderBy = 'createdAt', filterBy = 'null', filter } = params;
+    let order = params.order;
+    if (orderBy === 'lastName' || orderBy === 'firstName' || orderBy === 'company') {
+      order = order === 'desc' ? "asc" : "desc";
     }
-  });
+    return await prisma.registree.findMany({
+      skip: pageSize * (page - 1),
+      take: pageSize,
+      where: {
+        deleted: false,
+        [filterBy]: filter
+      },
+      orderBy: {
+        [orderBy]: order
+      },
+      
+    });
+  } else {
+    return await prisma.registree.findMany({
+      where: { deleted: false },
+      orderBy: { createdAt: 'desc' }
+    })
+  }
 };
 
-export const getRegistreeStats = async () => {
-  const stats = {
-    totalCount: 0,
-    pendingCount: 0,
-    paidCount: 0,
-    attendedCount: 0,
-    salesforceUsers: 0
+export const getRegistreeStats = async (page: number) => {
+  const total = await prisma.registree.count({ where: { deleted: false } })
+
+  const meta = {
+    stats: {
+      totalCount: total,
+      pendingCount: await prisma.registree.count({ where: { deleted: false, status: 'PENDING' } }),
+      paidCount: await prisma.registree.count({ where: { deleted: false, status: 'PAID' } }),
+      attendedCount: await prisma.registree.count({ where: { deleted: false, status: 'ATTENDED' } }),
+      salesforceUsers: await prisma.registree.count({ where: { deleted: false, salesforceUser: true } })
+    },
+    meta: {
+      pagination: {
+        page,
+        pageCount: total % DEFAULT_PAGE_SIZE === 0 ?
+          total / DEFAULT_PAGE_SIZE :
+          (total - total % DEFAULT_PAGE_SIZE) / DEFAULT_PAGE_SIZE + 1,
+        pageSize: DEFAULT_PAGE_SIZE,
+        total
+      }
+    }
   }
-  stats.totalCount = await prisma.registree.count();
-  stats.pendingCount = await prisma.registree.count({ where: { status: 'PENDING' } });
-  stats.paidCount = await prisma.registree.count({ where: { status: 'PAID' } });
-  stats.attendedCount = await prisma.registree.count({ where: { status: 'ATTENDED' } });
-  stats.salesforceUsers = await prisma.registree.count({ where: { salesforceUser: true } });
-  
-  return stats;
+
+
+
+
+  return meta;
 }
 
 export const getUniqueRegistree = async (uuid: string) => {
