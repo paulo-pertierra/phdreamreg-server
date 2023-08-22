@@ -23,14 +23,14 @@ app.use(cors());
 app.use(compression({ threshold: 0 }));
 app.use(express.json());
 
+app.use(morgan('common', { skip: (req, _res) => req.url === '/healthz' }));
+
 app.use(express.static(__dirname + '/../public'));
 app.use('/', webRouter);
 app.use('/api', rateLimiter, apiRouter);
 app.use('/healthz', healthzRouter);
 app.use(errorHandler);
 app.use('*', notFoundHandler);
-
-app.use(morgan('common', { skip: (req, _res) => req.url === '/healthz' }));
 
 const ENVIRONMENT = process.env.ENVIRONMENT || 'development';
 const BASE_URL = process.env.BASE_URL || 'http://localhost';
