@@ -21,7 +21,7 @@ app.disable('x-powered-by');
 app.use(cors());
 
 // Debug Proxy
-app.set('trust proxy', 1)
+app.set('trust proxy', 2)
 app.get('/ip', (request, response) => response.send(request.ip))
 
 app.use(compression({ threshold: 0 }));
