@@ -20,6 +20,10 @@ const app = express();
 app.disable('x-powered-by');
 app.use(cors());
 
+// Debug Proxy
+app.set('trust proxy', 1)
+app.get('/ip', (request, response) => response.send(request.ip))
+
 app.use(compression({ threshold: 0 }));
 app.use(morgan('common'));
 app.use(express.json());
