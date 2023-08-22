@@ -20,20 +20,17 @@ const app = express();
 app.disable('x-powered-by');
 app.use(cors());
 
-// Debug Proxy
-app.set('trust proxy', 3)
-app.get('/ip', (request, response) => response.send(request.ip))
-
 app.use(compression({ threshold: 0 }));
-app.use(morgan('common', { skip: (req, _res) => req.url === '/healthz' ? true : false }));
 app.use(express.json());
+
 app.use(express.static(__dirname + '/../public'));
 app.use('/', webRouter);
 app.use('/api', rateLimiter, apiRouter);
 app.use('/healthz', healthzRouter);
 app.use(errorHandler);
-
 app.use('*', notFoundHandler);
+
+app.use(morgan('common', { skip: (req, _res) => req.url === '/healthz' }));
 
 const ENVIRONMENT = process.env.ENVIRONMENT || 'development';
 const BASE_URL = process.env.BASE_URL || 'http://localhost';
@@ -42,18 +39,18 @@ const PORT = process.env.PORT || 5000;
 function start() {
   const server = app.listen(PORT, () => {
     if (ENVIRONMENT === 'development') {
-      //eslint-disable-next-line
+      // eslint-disable-next-line
       console.log(`Development server is running at http://localhost:${PORT}`);
     }
     if (ENVIRONMENT === 'production') {
-      //eslint-disable-next-line
+      // eslint-disable-next-line
       console.log(`Server is deployed at ${BASE_URL}`);
     }
   });
   process.on("SIGTERM", () => {
-    //eslint-disable-next-line
+    // eslint-disable-next-line
     console.log('SIGTERM signal received: If using Render, server may have spun down.');
-    // eslint-disable-next-line no-console
+    // eslint-disable-next-line
     server.close(() => console.log("Gracefully shut down."))
   })
 }
