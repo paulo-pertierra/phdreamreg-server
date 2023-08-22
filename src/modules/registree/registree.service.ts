@@ -73,10 +73,7 @@ export const getRegistreeStats = async (page: number) => {
     meta: {
       pagination: {
         page,
-        pageCount: total % DEFAULT_PAGE_SIZE === 0 ?
-          total / DEFAULT_PAGE_SIZE :
-          (total - total % DEFAULT_PAGE_SIZE) / DEFAULT_PAGE_SIZE + 1,
-        pageSize: DEFAULT_PAGE_SIZE,
+        pageCount: Math.ceil(total / DEFAULT_PAGE_SIZE),
         total
       }
     }
