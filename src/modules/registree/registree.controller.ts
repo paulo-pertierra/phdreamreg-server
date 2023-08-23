@@ -25,7 +25,7 @@ export const getRegistrees = async (req: Request, res: Response, next: NextFunct
     const registrees = await registreeService.getRegistrees({
       page: parseInt(req.query.page as string) || 1,
       orderBy: req.query.orderby as keyof Registree,
-      order: req.query.order = 'desc',
+      order: req.query.order as 'asc' | 'desc' || 'desc',
       filterBy: req.query.filterby as keyof Registree,
       filter: req.query.filter as string
     });
