@@ -46,7 +46,7 @@ export const getUniqueRegistree = async (req: Request, res: Response, next: Next
     const registree = await registreeService.getUniqueRegistree(req.params.id as string);
     res.json({
       data: {
-        registree
+        ...registree
       }
     });
   } catch (error) {
