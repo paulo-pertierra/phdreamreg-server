@@ -34,11 +34,7 @@ type QueryParameters = {
 
 export const getRegistrees = async (params: QueryParameters = undefined) => {
   if (params) {
-    const { page = 1, pageSize = DEFAULT_PAGE_SIZE, orderBy = 'createdAt', filterBy = 'null', filter } = params;
-    let order = params.order;
-    if (orderBy === 'lastName' || orderBy === 'firstName' || orderBy === 'company') {
-      order = order === 'desc' ? "asc" : "desc";
-    }
+    const { page = 1, pageSize = DEFAULT_PAGE_SIZE, orderBy = 'createdAt', order, filterBy = 'null', filter } = params;
     return await prisma.registree.findMany({
       skip: pageSize * (page - 1),
       take: pageSize,
