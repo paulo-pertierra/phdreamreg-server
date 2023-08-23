@@ -36,7 +36,6 @@ export const getRegistrees = async (params: QueryParameters = undefined) => {
   if (params) {
     const { page = 1, pageSize = DEFAULT_PAGE_SIZE, orderBy = 'createdAt', order, filterBy = 'null' } = params;
     let filter: string | boolean | undefined = params.filter
-    console.log(filter)
     if (filterBy === 'salesforceUser') {
       filter = filter === 'true' ? true : false
     }
