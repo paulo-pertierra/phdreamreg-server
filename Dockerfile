@@ -6,8 +6,9 @@ COPY . .
 
 RUN npm install \
  && npx prisma generate \
- && npx prisma db push
+ && npx prisma db push \
+ && npm run build
 
-CMD [ "npm", "run", "prod" ]
+CMD [ "node", "./src/index.js"]
 
 EXPOSE 5000
