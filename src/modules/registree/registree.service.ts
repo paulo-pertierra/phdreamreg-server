@@ -58,7 +58,7 @@ export const getRegistrees = async (params: QueryParameters = undefined) => {
   }
 };
 
-export const getRegistreeStats = async (total: number, page: number) => {
+export const getRegistreeStats = async (total: number, page: number = 1) => {
   const meta = {
     stats: {
       totalCount: await prisma.registree.count({ where: { deleted: false } }),

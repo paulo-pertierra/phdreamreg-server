@@ -56,7 +56,7 @@ export const getUniqueRegistree = async (req: Request, res: Response, next: Next
 
 export const updateUniqueRegistree = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const registree = registreeService.updateRegistreeStatus(
+    await registreeService.updateRegistreeStatus(
       req.params.id as string,
       req.query.status as Status
     );

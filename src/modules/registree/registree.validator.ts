@@ -24,8 +24,8 @@ export const createRegistreeValidator = [
     .notEmpty()
     .withMessage('Contact number is required.')
     .bail()
-    .matches(/^\+[0-9]{2} [0-9]{3} [0-9]{3} [0-9]{4}$/)
-    .withMessage('Contact number should be a valid PH number.'),
+    .isLength({ min: 7, max: 15 })
+    .withMessage("Please enter a valid phone number."),
   check('company').optional(),
   check('salesforceUser').isBoolean().optional(),
   check('salesforceUserRole').optional(),
