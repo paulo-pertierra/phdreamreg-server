@@ -4,7 +4,7 @@ import { adminAuthRouter } from './admin/auth/auth.route';
 
 const apiRouter = Router();
 
-apiRouter.use('/register', registreeRouter);
+apiRouter.use('/registree', registreeRouter);
 apiRouter.use('/admin/auth', adminAuthRouter);
 
 export default apiRouter;

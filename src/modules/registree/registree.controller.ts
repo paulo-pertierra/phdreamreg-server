@@ -61,10 +61,9 @@ export const updateUniqueRegistree = async (req: Request, res: Response, next: N
       req.query.status as Status
     );
     res.json({
-      data: {
-        registree
-      }
+      message: `Successfully set the status to ${req.query.status}`
     });
+    return;
   } catch (error) {
     next(error);
     return;
