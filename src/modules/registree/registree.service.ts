@@ -59,9 +59,10 @@ export const getRegistrees = async (params: QueryParameters = undefined) => {
 };
 
 export const getRegistreeStats = async (total: number, page: number = 1) => {
+  const totalCount = await prisma.registree.count({ where: { deleted: false } });
   const meta = {
     stats: {
-      totalCount: await prisma.registree.count({ where: { deleted: false } }),
+      totalCount,
       pendingCount: await prisma.registree.count({ where: { deleted: false, status: 'PENDING' } }),
       paidCount: await prisma.registree.count({ where: { deleted: false, status: 'PAID' } }),
       attendedCount: await prisma.registree.count({ where: { deleted: false, status: 'ATTENDED' } }),
@@ -69,7 +70,7 @@ export const getRegistreeStats = async (total: number, page: number = 1) => {
     },
     pagination: {
       page,
-      pageCount: Math.ceil(total / DEFAULT_PAGE_SIZE),
+      pageCount: Math.ceil(totalCount / DEFAULT_PAGE_SIZE),
       pageSize: DEFAULT_PAGE_SIZE,
       total
     }
