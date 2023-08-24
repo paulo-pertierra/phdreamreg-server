@@ -70,7 +70,7 @@ export const getRegistreeStats = async (total: number, page: number = 1) => {
     },
     pagination: {
       page,
-      pageCount: Math.ceil(totalCount / DEFAULT_PAGE_SIZE),
+      pageCount: Math.ceil(total / DEFAULT_PAGE_SIZE),
       pageSize: DEFAULT_PAGE_SIZE,
       total
     }
