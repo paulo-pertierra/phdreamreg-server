@@ -28,10 +28,9 @@ export const getRegistrees = async (req: Request, res: Response, next: NextFunct
       order: req.query.order as 'asc' | 'desc' || 'desc',
       filterBy: req.query.filterby as keyof Registree,
       filter: req.query.filter as string,
-      showSf: false
+      showSf: undefined
     }
-
-    params.showSf = req.query.sfusers === 'true' ? true : false;
+    params.showSf = req.query.sfusers === 'true' ? true : typeof req.query.sfusers === 'undefined' ? undefined : false ;
 
     const registrees = await registreeService.getRegistrees(params);
     const meta = await registreeService.getRegistreeStats(params, parseInt(req.query.page as string));

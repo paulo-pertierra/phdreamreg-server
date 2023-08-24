@@ -33,10 +33,23 @@ export type QueryParameters = {
 } & { showSf?: boolean } | undefined
 
 export const getRegistrees = async (params: QueryParameters) => {
-  const { page = 1, pageSize = DEFAULT_PAGE_SIZE, orderBy = 'createdAt', order, filterBy = 'null', showSf } = params!;
+  const { page = 1, pageSize = DEFAULT_PAGE_SIZE, orderBy = 'createdAt', order, filterBy = 'null', showSf = undefined } = params!;
   const filter = params!.filter
 
-  return await prisma.registree.findMany({
+  if (typeof showSf === 'undefined' )
+    return await prisma.registree.findMany({
+      skip: pageSize * (page - 1),
+      take: pageSize,
+      where: {
+        deleted: false,
+        [filterBy]: filter as string,
+      },
+      orderBy: {
+        [orderBy]: order
+      },
+    });
+
+  else return await prisma.registree.findMany({
     skip: pageSize * (page - 1),
     take: pageSize,
     where: {
