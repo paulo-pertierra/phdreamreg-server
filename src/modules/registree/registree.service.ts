@@ -30,25 +30,24 @@ export type QueryParameters = {
   order?: 'desc' | 'asc'
   filterBy?: keyof Registree
   filter?: string
-} | undefined
+} & { showSf?: boolean } | undefined
 
 export const getRegistrees = async (params: QueryParameters) => {
-    const { page = 1, pageSize = DEFAULT_PAGE_SIZE, orderBy = 'createdAt', order, filterBy = 'null' } = params!;
-    let filter: string | boolean | undefined = params!.filter
-    if (filterBy === 'salesforceUser') {
-      filter = filter === 'true' ? true : false
-    }
-    return await prisma.registree.findMany({
-      skip: pageSize * (page - 1),
-      take: pageSize,
-      where: {
-        deleted: false,
-        [filterBy]: filter
-      },
-      orderBy: {
-        [orderBy]: order
-      },
-    });
+  const { page = 1, pageSize = DEFAULT_PAGE_SIZE, orderBy = 'createdAt', order, filterBy = 'null', showSf } = params!;
+  const filter = params!.filter
+
+  return await prisma.registree.findMany({
+    skip: pageSize * (page - 1),
+    take: pageSize,
+    where: {
+      deleted: false,
+      salesforceUser: showSf,
+      [filterBy]: filter as string,
+    },
+    orderBy: {
+      [orderBy]: order
+    },
+  });
 };
 
 export const getRegistreeStats = async (params: QueryParameters, page: number = 1) => {
