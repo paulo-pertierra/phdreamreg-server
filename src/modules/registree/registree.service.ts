@@ -55,7 +55,8 @@ export const getRegistreeStats = async (params: QueryParameters, page: number = 
   const { filterBy = 'null', filter } = params!;
   const totalFiltered = await prisma.registree.count({ where: {
     deleted: false,
-    [filterBy]: filter
+    [filterBy]: filter,
+    salesforceUser: params?.showSf
   } })
   const meta = {
     stats: {
