@@ -23,7 +23,7 @@ export const updateRegistreeStatus = async (uuid: string, status: Status) => {
   });
 };
 
-type QueryParameters = {
+export type QueryParameters = {
   page?: number
   pageSize?: number
   orderBy?: keyof Registree
@@ -32,10 +32,9 @@ type QueryParameters = {
   filter?: string
 } | undefined
 
-export const getRegistrees = async (params: QueryParameters = undefined) => {
-  if (params) {
-    const { page = 1, pageSize = DEFAULT_PAGE_SIZE, orderBy = 'createdAt', order, filterBy = 'null' } = params;
-    let filter: string | boolean | undefined = params.filter
+export const getRegistrees = async (params: QueryParameters) => {
+    const { page = 1, pageSize = DEFAULT_PAGE_SIZE, orderBy = 'createdAt', order, filterBy = 'null' } = params!;
+    let filter: string | boolean | undefined = params!.filter
     if (filterBy === 'salesforceUser') {
       filter = filter === 'true' ? true : false
     }
@@ -50,16 +49,15 @@ export const getRegistrees = async (params: QueryParameters = undefined) => {
         [orderBy]: order
       },
     });
-  } else {
-    return await prisma.registree.findMany({
-      where: { deleted: false },
-      orderBy: { createdAt: 'desc' }
-    })
-  }
 };
 
-export const getRegistreeStats = async (total: number, page: number = 1) => {
+export const getRegistreeStats = async (params: QueryParameters, page: number = 1) => {
   const totalCount = await prisma.registree.count({ where: { deleted: false } });
+  const { filterBy = 'null', filter } = params!;
+  const totalFiltered = await prisma.registree.count({ where: {
+    deleted: false,
+    [filterBy]: filter
+  } })
   const meta = {
     stats: {
       totalCount,
@@ -70,9 +68,9 @@ export const getRegistreeStats = async (total: number, page: number = 1) => {
     },
     pagination: {
       page,
-      pageCount: Math.ceil(total / DEFAULT_PAGE_SIZE),
+      pageCount: Math.ceil(totalFiltered / DEFAULT_PAGE_SIZE),
       pageSize: DEFAULT_PAGE_SIZE,
-      total
+      total: totalFiltered
     }
   }
 
